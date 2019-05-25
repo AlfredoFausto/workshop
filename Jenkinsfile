@@ -5,6 +5,9 @@ pipeline{
         LOGIN = sh script:"vault login -method=github token=${TOKEN_ALF}"
         DIGITALTOKEN = sh (script:'vault kv get -field=token workshop/AlfredoFausto/digitalocean', returnStdout: true).trim()
     }
+    triggers{
+        pollSCM('H/5 * * * *')
+    }
     stages{
         stage ("init"){
             when { expression { env.BRANCH_NAME ==~ /dev.*/ || env.BRANCH_NAME ==~ /PR.*/ || env.BRANCH_NAME ==~ /feat.*/ } }
