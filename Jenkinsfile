@@ -28,12 +28,13 @@ pipeline{
         stage ("apply"){
             when { expression { env.BRANCH_NAME ==~ /master.*/ } }
             steps{
-                echo "validate"
+                sh 'cd workshop && terraform apply -out=plan -input=false'
+                input(message: "Do you want to create a PR to apply this plan?", ok: "yes")
             }
         }
         stage ("destroy"){
             steps{
-                echo "validate"
+                sh 'cd workshop && terraform destroy -out=plan -input=false'
             }
         }
     }
